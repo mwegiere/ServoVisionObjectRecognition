@@ -1,0 +1,110 @@
+    <Task>  
+        <Reference>  
+            <Author>  
+                <name>Maciej Wegierek</name>  
+                <link>wegierek.maciej@gmail.com</link>  
+            </Author>  
+      
+            <Description>  
+                <brief>Photo processing: circel finding</brief>  
+                <full>Processes images.</full>    
+            </Description>  
+        </Reference>  
+          
+        <Subtasks>  
+            <Subtask name="main">  
+		<Executor name="Processing" period="0.016">  
+		
+                        <!--><Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+					<param name="image_topic">/camera/image_color</param>
+                                        <param name="image_topic">/camera_p/image_color</param>
+                        </Component><-->
+
+                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
+					<param name="sequence.pattern">.*\.png</param>
+					<param name="mode.loop">1</param>
+                        </Component>
+			
+			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
+					<param name="width">1296</param>
+					<param name="height">1032</param>
+					<param name="camera_matrix">1051.020107 0.000000 645.847754 ; 0.000000 1047.329241 500.844827 ; 0 0 1</param>
+					<param name="dist_coeffs">-0.393842 0.157774 -0.000447 0.001075 0.000000</param>
+					<param name="projection_matrix">872.926636 0.000000 647.073604 0.000000 ; 0.000000 936.202454 496.009265 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param>
+			</Component>
+
+			<Component name="DiodRecognition" type="ServoVisionObjectRecognition:DiodRecognition" priority="5" bump="0">					
+			</Component>
+
+			<Component name="Calib" type="CvBasic:Calib" priority="6" bump="0">						
+			</Component>
+
+			<Component name="SolvePnP" type="CvBasic:CvSolvePnP" priority="7" bump="0">
+					<param name="enable">false</param>
+					<param name="flags">CV_P3P</param>						
+			</Component>
+
+			<!--><Component name="DrawCoordinateSystem" type="CvBasic:DrawCoordinateSystem" priority="8" bump="0">
+			</Component><-->
+
+			<Component name="DrawDiods" type="ServoVisionObjectRecognition:DrawDiods" priority="8" bump="0">
+			</Component>
+
+			<Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
+					<param name="ros.topic_name">homog_matrix</param>
+			</Component>
+
+                        <Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="10" bump="0">
+					<param name="ros.topic_name">found</param>
+                        </Component>
+
+			<Component name="Window" type="CvBasic:CvWindow" priority="11" bump="0">
+					<param name="count">2</param>
+					<param name="title">Wejscie, kolka</param>
+			</Component>  
+                </Executor>  
+
+            </Subtask>  
+        </Subtasks>  
+      
+        <DataStreams>  
+            	<Source name="Sequence.out_img">
+			<sink>DiodRecognition.in_img</sink>
+			<sink>Window.in_img0</sink>
+			<sink>DrawDiods.in_img</sink>
+		</Source>
+
+		<Source name="CameraInfo.out_camera_info">
+			<sink>Calib.in_camera_info</sink>
+			<sink>SolvePnP.in_camera_info</sink>
+		</Source>
+		
+		<Source name="DiodRecognition.out_gridPattern">
+			<sink>SolvePnP.in_object3d</sink>
+		        <sink>Calib.in_object3d</sink>
+		</Source>
+
+                <Source name="DiodRecognition.found">
+			<sink>FoundProxy.in_data</sink>
+                </Source>
+
+		<Source name="DiodRecognition.diodPoints">
+			<sink>DrawDiods.diodPoints</sink>
+		</Source>
+		
+		<Source name="SolvePnP.out_homogMatrix">
+			<!--><sink>DrawCoordinateSystem.in_homogMatrix</sink><-->
+			<sink>HomogProxy.in_data</sink>
+		</Source>
+	
+		<!--><Source name="DrawCoordinateSystem.out_csystem">
+			<sink>Window.in_draw0</sink>
+		</Source><-->
+
+		<Source name="DrawDiods.out_img">
+			<sink>Window.in_img1</sink>
+		</Source>
+		
+        </DataStreams>  
+    </Task>  

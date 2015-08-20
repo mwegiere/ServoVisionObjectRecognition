@@ -1,0 +1,5 @@
+CvFindCirclesGrid	libCvFindDiodGrid.so
+DiodGridRecogniotion	libDiodGridRecogniotion.so
+DrawDiods	libDrawDiods.so
+DiodRecognition	libDiodRecognition.so
+HomogMatrixPub	libHomogMatrixPub.so

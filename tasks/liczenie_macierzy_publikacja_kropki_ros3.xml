@@ -1,0 +1,90 @@
+    <Task>  
+        <Reference>  
+            <Author>  
+                <name>Maciej Wegierek</name>  
+                <link>wegierek.maciej@gmail.com</link>  
+            </Author>  
+      
+            <Description>  
+                <brief>Photo processing: circel finding</brief>  
+                <full>Processes images.</full>    
+            </Description>  
+        </Reference>  
+          
+        <Subtasks>  
+            <Subtask name="main">  
+		<Executor name="Processing" period="0.016">  
+			
+                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
+					<param name="sequence.pattern">.*\.png</param>
+					<param name="mode.loop">1</param>
+                        </Component>
+
+			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
+			
+					<param name="width">1296</param>
+					<param name="height">1032</param>
+					<param name="camera_matrix">1051.020107 0.000000 645.847754 ; 0.000000 1047.329241 500.844827 ; 0 0 1</param>
+					<param name="dist_coeffs">-0.393842 0.157774 -0.000447 0.001075 0.000000</param>
+					<param name="projection_matrix">872.926636 0.000000 647.073604 0.000000 ; 0.000000 936.202454 496.009265 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param>
+			
+			</Component>
+
+			<Component name="FindCirclesGrid" type="CvBasic:CvFindCirclesGrid" priority="5" bump="0">
+					<param name="image.inverse">0</param>						
+					<param name="grid.width">3</param>
+					<param name="grid.height">5</param>
+					<param name="grid.size">0.06</param>
+							
+			</Component>
+
+			<Component name="Calib" type="CvBasic:Calib" priority="6" bump="0">						
+			</Component>
+
+			<Component name="SolvePnP" type="CvBasic:CvSolvePnP" priority="7" bump="0">						
+			</Component>
+
+			<Component name="HomogMatrixPub" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
+					<param name="ros.topic_name">center_x</param>
+			</Component>
+
+			<Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
+					<param name="ros.topic_name">homog_matrix</param>
+			</Component>
+
+			<Component name="Window" type="CvBasic:CvWindow" priority="11" bump="0">
+					<param name="count">1</param>
+					<param name="title">Wejscie</param>
+			</Component>  			
+                </Executor>  
+
+            </Subtask>  
+        </Subtasks>  
+      
+        <DataStreams>  
+            	<Source name="Sequence.out_img">
+			<sink>Window.in_img0</sink>
+			<sink>FindCirclesGrid.in_img</sink>
+		</Source>
+
+		<Source name="CameraInfo.out_camera_info">
+			<sink>SolvePnP.in_camera_info</sink>
+		</Source>
+				
+		<Source name="FindCirclesGrid.out_pattern">
+			<sink>SolvePnP.in_object3d</sink>
+		        <sink>Calib.in_object3d</sink>
+		</Source>
+		
+		<Source name="SolvePnP.out_homogMatrix">
+			<sink>HomogMatrixPub.in_matrix</sink>
+		</Source>
+
+		<Source name="HomogMatrixPub.out_matrix">
+			<sink>HomogProxy.in_data</sink>
+		</Source>
+		
+		
+        </DataStreams>  
+    </Task>  

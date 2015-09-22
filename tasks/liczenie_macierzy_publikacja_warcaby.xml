@@ -31,11 +31,18 @@
 			
 			</Component>
 
-			<Component name="FindCirclesGrid" type="CvBasic:CvFindCirclesGrid" priority="5" bump="0">
-					<param name="image.inverse">0</param>						
-					<param name="grid.width">3</param>
-					<param name="grid.height">5</param>
-					<param name="grid.size">0.06</param>							
+			<Component name="Roi" type="CvRoi:Roi" priority="6" bump="0">						
+			</Component>
+			
+			<Component name="ColorConverter" type="CvBasic:CvColorConv" priority="4" bump="0">
+					<param name="type">CV_RGB2GRAY</param>
+			</Component>
+
+			<Component name="CvFindChessboardCorners" type="CvBasic:CvFindChessboardCorners" priority="5" bump="0">
+					<param name="chessboard.board_width">5</param>
+					<param name="chessboard.board_height">4</param>
+					<param name="chessboard.square_width">0.018333</param>
+					<param name="chessboard.square_height">0.01852</param>							
 			</Component>
 
 			<Component name="Calib" type="CvBasic:Calib" priority="6" bump="0">						
@@ -62,16 +69,26 @@
         </Subtasks>  
       
         <DataStreams>  
+
+		
             	<Source name="Sequence.out_img">
+			<sink>Roi.in_img</sink>
+		</Source>
+
+		<Source name="Roi.out_img">
+			<sink>ColorConverter.in_img</sink>
+		</Source>
+
+		<Source name="ColorConverter.out_img">
 			<sink>Window.in_img0</sink>
-			<sink>FindCirclesGrid.in_img</sink>
+			<sink>CvFindChessboardCorners.in_img</sink>
 		</Source>
 
 		<Source name="CameraInfo.out_camera_info">
 			<sink>SolvePnP.in_camera_info</sink>
 		</Source>
 				
-		<Source name="FindCirclesGrid.out_pattern">
+		<Source name="CvFindChessboardCorners.out_chessboard">
 			<sink>SolvePnP.in_object3d</sink>
 		        <sink>Calib.in_object3d</sink>
 		</Source>

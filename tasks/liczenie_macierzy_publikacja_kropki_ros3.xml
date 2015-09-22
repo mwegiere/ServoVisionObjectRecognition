@@ -32,7 +32,7 @@
 			</Component>
 
 			<Component name="FindCirclesGrid" type="CvBasic:CvFindCirclesGrid" priority="5" bump="0">
-					<param name="image.inverse">0</param>						
+					<param name="image.inverse">1</param>						
 					<param name="grid.width">3</param>
 					<param name="grid.height">5</param>
 					<param name="grid.size">0.06</param>

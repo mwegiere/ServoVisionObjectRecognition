@@ -57,10 +57,10 @@ void DiodRecognition::initGridPattern() {
 
 	vector <cv::Point3f> modelPoints;
 
-	modelPoints.push_back(cv::Point3f(0.055,0.006, 0)); //B
-	modelPoints.push_back(cv::Point3f(0.009,0.045, 0)); //G
-	modelPoints.push_back(cv::Point3f(0.091,0.044, 0)); //R
-	modelPoints.push_back(cv::Point3f(0.091,0.004, 0)); //W
+	modelPoints.push_back(cv::Point3f(0.04813,0.00802, 0)); //B
+	modelPoints.push_back(cv::Point3f(0.00943,0.006307, 0)); //G
+	modelPoints.push_back(cv::Point3f(0.090827,0.00665, 0)); //R
+	modelPoints.push_back(cv::Point3f(0.09066,0.004626, 0)); //W
 
 	// Set model points.
 	gridPattern.setModelPoints(modelPoints);

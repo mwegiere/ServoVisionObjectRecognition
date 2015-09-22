@@ -13,12 +13,13 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="0.016">  
+		<!--Executor name="Processing" period="0.016"-->  
+		<Executor name="Processing" period="0.016"> 
 		
-                        <!--><Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+                        <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
                                         <param name="image_topic">/camera_p/image_color</param>
-                        </Component><-->
+                        </Component-->
 
                         <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
@@ -30,6 +31,9 @@
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
 					<param name="width">1296</param>
 					<param name="height">1032</param>
+					<!--param name="camera_matrix">1034.072119 0.000000 639.384968; 0.000000 1026.712209 516.416027 ; 0 0 1</param-->
+					<!--param name="dist_coeffs">-0.370882 0.142331 -0.003487 0.000549 0.000000</param-->
+					<!--param name="projection_matrix">872.926636 0.000000 647.073604 0.000000 ; 0.000000 936.202454 496.009265 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param-->
 					<param name="camera_matrix">1051.020107 0.000000 645.847754 ; 0.000000 1047.329241 500.844827 ; 0 0 1</param>
 					<param name="dist_coeffs">-0.393842 0.157774 -0.000447 0.001075 0.000000</param>
 					<param name="projection_matrix">872.926636 0.000000 647.073604 0.000000 ; 0.000000 936.202454 496.009265 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param>
@@ -59,9 +63,9 @@
 					<param name="ros.topic_name">homog_matrix</param>
 			</Component>
 
-                        <Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="10" bump="0">
+                       <!-- <Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="10" bump="0">
 					<param name="ros.topic_name">found</param>
-                        </Component>
+                        </Component>-->
 
 			<Component name="Window" type="CvBasic:CvWindow" priority="11" bump="0">
 					<param name="count">2</param>
@@ -89,9 +93,9 @@
 		        <sink>Calib.in_object3d</sink>
 		</Source>
 
-                <Source name="DiodRecognition.found">
+<!--                <Source name="DiodRecognition.found">
 			<sink>FoundProxy.in_data</sink>
-                </Source>
+                </Source>-->
 
 		<Source name="DiodRecognition.diodPoints">
 			<sink>DrawDiods.diodPoints</sink>

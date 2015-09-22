@@ -15,7 +15,7 @@
 #include "Types/HomogMatrix.hpp"
 #include <opencv2/opencv.hpp>
 
-
+#include <fstream>
 namespace Processors {
 namespace HomogMatrixPub {
 
@@ -80,7 +80,9 @@ protected:
 
 	
 	// Handlers
-	void onNewData();
+    void onNewData();
+
+    std::fstream plik;
 
 };
 

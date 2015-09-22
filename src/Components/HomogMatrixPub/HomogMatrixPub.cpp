@@ -13,6 +13,9 @@
 #include <boost/bind.hpp>
 #include <vector>
 
+#include <iostream>
+
+
 namespace Processors {
 namespace HomogMatrixPub {
 
@@ -33,6 +36,7 @@ void HomogMatrixPub::prepareInterface() {
 	registerHandler("onNewData", &h_onNewData);
 	addDependency("onNewData", &in_matrix);
 
+
 }
 
 bool HomogMatrixPub::onInit() {
@@ -41,6 +45,7 @@ bool HomogMatrixPub::onInit() {
 }
 
 bool HomogMatrixPub::onFinish() {
+
 	return true;
 }
 
@@ -54,6 +59,9 @@ bool HomogMatrixPub::onStart() {
 
 void HomogMatrixPub::onNewData() {
 
+
+
+    plik.open( "/home/mwegiere/DCL/ServoVisionObjectRecognition/src/Components/HomogMatrixPub/wyniki2.txt", std::ios::app | ios::out);
 	Types::HomogMatrix homogMatrix;
     float tmp[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	if(!in_matrix.empty()){
@@ -63,12 +71,16 @@ void HomogMatrixPub::onNewData() {
         for (int i=0; i<4; ++i)
             for (int j=0; j<4; ++j){
                 tmp[k] = (float)dataMatrix(i,j);
+                plik<<tmp[k];
+                plik<<'\n';
                 ++k;
 			}
 	}
     CLOG(LINFO) << "Tmp:\n" << tmp;
     std::vector<float> out_homogMatrix (tmp, tmp + sizeof(tmp) / sizeof(float) );
 	out_matrix.write(out_homogMatrix);
+    plik.close();
+
 	
 //class Base::DataStreamIn<Types::HomogMatrix>
 

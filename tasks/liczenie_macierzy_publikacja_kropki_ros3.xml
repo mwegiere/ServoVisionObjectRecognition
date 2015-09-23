@@ -25,14 +25,14 @@
 			
 					<param name="width">1296</param>
 					<param name="height">1032</param>
-					<param name="camera_matrix">1051.020107 0.000000 645.847754 ; 0.000000 1047.329241 500.844827 ; 0 0 1</param>
-					<param name="dist_coeffs">-0.393842 0.157774 -0.000447 0.001075 0.000000</param>
-					<param name="projection_matrix">872.926636 0.000000 647.073604 0.000000 ; 0.000000 936.202454 496.009265 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param>
+					<param name="camera_matrix">1463.616840 0.000000 629.647398 ; 0.000000 1445.628524 518.099151 ; 0 0 1</param>
+					<param name="dist_coeffs">-0.709745 0.555712 -0.014820 0.010738 0.000000</param>
+					<param name="projection_matrix">1240.662354 0.000000 639.951241 0.000000 ; 0.000000 1302.617188 505.741852 0.000000 ; 0.000000 0.000000 1.000000 0.000000</param>
 			
 			</Component>
 
 			<Component name="FindCirclesGrid" type="CvBasic:CvFindCirclesGrid" priority="5" bump="0">
-					<param name="image.inverse">0</param>						
+					<param name="image.inverse">1</param>						
 					<param name="grid.width">3</param>
 					<param name="grid.height">5</param>
 					<param name="grid.size">0.06</param>							

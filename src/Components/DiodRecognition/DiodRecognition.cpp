@@ -343,7 +343,7 @@ void DiodRecognition::onNewImage()
 				CLOG(LWARNING) << "Diods NOT found!!!\n\n\n";
 			}
 			out_img.write(image);
-		//0 lub 1 jesli plansza znalalzeniona lub nie znaleziona
+		//0 lub 1 jesli plansza znaleziona lub nie znaleziona
 		found.write(_found);
 
 	} catch (const cv::Exception& e) {

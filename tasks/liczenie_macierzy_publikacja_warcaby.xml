@@ -70,8 +70,7 @@
       
         <DataStreams>  
 
-		
-            	<Source name="Sequence.out_img">
+           	<Source name="Sequence.out_img">
 			<sink>Roi.in_img</sink>
 		</Source>
 

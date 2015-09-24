@@ -27,7 +27,6 @@
 					<param name="mode.loop">1</param>
                         </Component>
 			
-
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
 					<param name="width">1296</param>
 					<param name="height">1032</param>
@@ -60,7 +59,7 @@
 					<param name="ros.topic_name">homog_matrix</param>
 			</Component>
 
-                       <!-- <Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="10" bump="0">
+                        <!-- <Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="10" bump="0">
 					<param name="ros.topic_name">found</param>
                         </Component>-->
 
@@ -90,7 +89,7 @@
 		        <sink>Calib.in_object3d</sink>
 		</Source>
 
-<!--                <Source name="DiodRecognition.found">
+		<!--<Source name="DiodRecognition.found">
 			<sink>FoundProxy.in_data</sink>
                 </Source>-->
 
@@ -106,14 +105,6 @@
 		<Source name="HomogMatrixPub.out_matrix">
 			<sink>HomogProxy.in_data</sink>
 		</Source>
-
-		<!--><Source name="SolvePnP.out_rvec">
-			<sink>DrawCoordinateSystem.in_rvec</sink>
-		</Source><-->
-
-		<!--><Source name="SolvePnP.out_tvec">
-			<sink>DrawCoordinateSystem.in_tvec</sink>
-		</Source><-->
 	
 		<!--><Source name="DrawCoordinateSystem.out_csystem">
 			<sink>Window.in_draw0</sink>

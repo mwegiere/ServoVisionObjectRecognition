@@ -58,8 +58,8 @@ void DiodRecognition::initGridPattern() {
 	vector <cv::Point3f> modelPoints;
 
 	modelPoints.push_back(cv::Point3f(0.04813,0.00802, 0)); //B
-	modelPoints.push_back(cv::Point3f(0.00943,0.006307, 0)); //G
-	modelPoints.push_back(cv::Point3f(0.090827,0.00665, 0)); //R
+    modelPoints.push_back(cv::Point3f(0.00943,0.0457, 0)); //G
+    modelPoints.push_back(cv::Point3f(0.090827,0.04535, 0)); //R
 	modelPoints.push_back(cv::Point3f(0.09066,0.004626, 0)); //W
 
 	// Set model points.
@@ -115,7 +115,7 @@ void DiodRecognition::onNewImage()
 		// Retrieve image from the stream.
 		cv::Mat image = in_img.read();//.clone();
 
-		int _found = 0;
+        float _found = 0.0;
 
 		double sumaB = 0;
 		double sumaG = 0;
@@ -178,25 +178,42 @@ void DiodRecognition::onNewImage()
 				}
 			}
 		}
-		
-		std::vector<cv::Point2f> gridPoints;
-		gridPoints.push_back(wsp_maxB);
-		gridPoints.push_back(wsp_maxG);
-		gridPoints.push_back(wsp_maxR);
-		gridPoints.push_back(wsp_maxW);
+        int prog = 50;
+        std::vector<cv::Point2f> gridPoints;
+	
+	cv::Point2f wsp_zero;
+	wsp_zero.x = 0.0;
+	wsp_zero.y = 0.0;
+
+        if (maxB > prog & maxG > prog & maxR > prog & maxW > prog){
+            //std::cout<<"found"<<std::endl;
+            _found = 1.0;
+            gridPoints.push_back(wsp_maxB);
+            gridPoints.push_back(wsp_maxG);
+            gridPoints.push_back(wsp_maxR);
+            gridPoints.push_back(wsp_maxW);
+        }
 
 
-		_found = 1;
+        else{
+            _found = 0.0;
+            gridPoints.push_back(wsp_zero);
+            gridPoints.push_back(wsp_zero);
+            gridPoints.push_back(wsp_zero);
+            gridPoints.push_back(wsp_zero);
+        }
+        //std::cout<<wsp_maxB<<", "<<wsp_maxG<<", "<<wsp_maxR<<", "<<wsp_maxW<<::endl;
 
-		if(_found==1){
+        if(_found==1.0){
 		    CLOG(LWARNING)<<"Diods found!!!\n\n\n";
 		    diodPoints.write(gridPoints);
 		    gridPattern.setImagePoints(gridPoints);
 		    out_gridPattern.write(gridPattern);
 
-			} else {
-				CLOG(LWARNING) << "Diods NOT found!!!\n\n\n";
-			}
+        }
+        else {
+            CLOG(LWARNING) << "Diods NOT found!!!\n\n\n";
+        }
 			out_img.write(image);
 		//0 lub 1 jesli plansza znaleziona lub nie znaleziona
 		found.write(_found);

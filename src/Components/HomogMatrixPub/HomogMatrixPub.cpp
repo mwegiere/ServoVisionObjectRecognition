@@ -61,8 +61,8 @@ void HomogMatrixPub::onNewData() {
 
 
 
-    plik.open( "/home/mwegiere/DCL/ServoVisionObjectRecognition/src/Components/HomogMatrixPub/wyniki2.txt", std::ios::app | ios::out);
-	Types::HomogMatrix homogMatrix;
+    plik.open( "/home/mwegiere/DCL/ServoVisionObjectRecognition/src/Components/HomogMatrixPub/T_DC.txt", std::ios::app | ios::out);
+    Types::HomogMatrix homogMatrix;
     float tmp[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	if(!in_matrix.empty()){
 		int k = 0;
@@ -76,6 +76,8 @@ void HomogMatrixPub::onNewData() {
                 ++k;
 			}
 	}
+	
+
     CLOG(LINFO) << "Tmp:\n" << tmp;
     std::vector<float> out_homogMatrix (tmp, tmp + sizeof(tmp) / sizeof(float) );
 	out_matrix.write(out_homogMatrix);

@@ -12,7 +12,7 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="0.016">  
+		<Executor name="Processing" period="2">  
 
 			<!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
@@ -21,42 +21,31 @@
                         <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
 					<param name="sequence.pattern">.*\.png</param>
-					<param name="mode.loop">1</param>
                         </Component>
 			
-			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="6" bump="0">						
+			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="2" bump="0">						
 			</Component>
 
-			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
+			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="3">
 					<param name="width">1296</param>
 					<param name="height">1032</param>
-					<param name="camera_matrix">1364.923853 0.000000 600.979539; 0.000000 1366.955649 480.908814; 0 0 1</param>
-					<param name="dist_coeffs">-0.574760 0.455905 0.010875 0.024076 0.000000</param>
-					<param name="projection_matrix">1190.574585 0.000000 624.915946 0.000000; 0.000000 1253.715454 482.950689 0.000000; 0.000000 0.000000 1.000000 0.000000</param>
+					<param name="camera_matrix">1097.309750 0.000000 631.666708; 0.000000 1091.041004 518.507823; 0 0 1</param>
+					<param name="dist_coeffs">-0.432862 0.206828 -0.005944 0.003594 0.000000</param>
+					<param name="projection_matrix">916.519531 0.000000 633.177700 0.000000; 0.000000 975.772583 511.869155 0.000000; 0.000000 0.000000 1.000000 0.000000</param>
 			</Component>
 
-			<Component name="Roi" type="CvRoi:Roi" priority="6" bump="0">						
+			<Component name="Roi" type="CvRoi:Roi" priority="4" bump="0">						
 			</Component>
 			
-			<Component name="ColorConverter" type="CvBasic:CvColorConv" priority="4" bump="0">
+			<Component name="ColorConverter" type="CvBasic:CvColorConv" priority="5" bump="0">
 					<param name="type">CV_RGB2GRAY</param>
 			</Component>
 
-			<Component name="CvFindChessboardCorners" type="CvBasic:CvFindChessboardCorners" priority="5" bump="0">
+			<Component name="CvFindChessboardCorners" type="CvBasic:CvFindChessboardCorners" priority="6" bump="0">
 					<param name="chessboard.board_width">5</param>
 					<param name="chessboard.board_height">4</param>
 					<param name="chessboard.square_width">0.018333</param>
 					<param name="chessboard.square_height">0.01852</param>							
-			</Component>
-
-			<!--Component name="CvFindChessboardCorners" type="CvBasic:CvFindChessboardCorners" priority="5" bump="0">
-					<param name="chessboard.board_width">5</param>
-					<param name="chessboard.board_height">4</param>
-					<param name="chessboard.square_width">0.03</param>
-					<param name="chessboard.square_height">0.03</param>							
-			</Component-->
-
-			<Component name="Calib" type="CvBasic:Calib" priority="6" bump="0">						
 			</Component>
 
 			<Component name="SolvePnP" type="CvBasic:CvSolvePnP" priority="7" bump="0">						
@@ -107,10 +96,13 @@
 			<sink>SolvePnP.in_camera_info</sink>
 			<sink>DrawCoordinateSystem.in_camera_matrix</sink>
 		</Source>
-				
+			
+		<Source name="CvFindChessboardCorners.out_found">
+			<sink>SolvePnP.in_found</sink>
+		</Source>
+	
 		<Source name="CvFindChessboardCorners.out_chessboard">
 			<sink>SolvePnP.in_object3d</sink>
-		        <sink>Calib.in_object3d</sink>
 		</Source>
 		
 		<Source name="SolvePnP.out_homogMatrix">

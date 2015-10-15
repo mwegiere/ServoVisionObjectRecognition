@@ -58,8 +58,8 @@ void DiodRecognition::initGridPattern() {
 	vector <cv::Point3f> modelPoints;
 
 	modelPoints.push_back(cv::Point3f(0.04813,0.00802, 0)); //B
-    modelPoints.push_back(cv::Point3f(0.00943,0.0457, 0)); //G
-    modelPoints.push_back(cv::Point3f(0.090827,0.04535, 0)); //R
+        modelPoints.push_back(cv::Point3f(0.00943,0.0457, 0)); //G
+        modelPoints.push_back(cv::Point3f(0.090827,0.04535, 0)); //R
 	modelPoints.push_back(cv::Point3f(0.09066,0.004626, 0)); //W
 
 	// Set model points.
@@ -81,30 +81,6 @@ bool DiodRecognition::onStep()
 	return true;
 }
 
-double moment(double p, double q, cv::Mat& _I, cv::Vec3b color, int minRows, int maxRows, int minCols, int maxCols) {
-    cv::Mat_<cv::Vec3b> I = _I;
-    double m = 0.0;
-    for (int i = minRows; i <= maxRows; ++i)
-        for (int j = minCols; j <= maxCols; ++j) {
-            if (I(i, j) != color && i >= minRows && i<= maxRows && j>=minCols && j<=maxCols)
-                m += (pow((double) i, p)) * (pow((double) j, q));
-        }
-    return m;
-}
-
-cv::Vec3b pobierzKolor(cv::Mat& image, int i, int j){
-	cv::Mat_<cv::Vec3b> _I = image;
-	if (i > 0 && i< _I.rows && j > 0 && j < _I.cols){
-		double b = (_I(i-1 ,j)[0] + _I(i ,j)[0] + _I(i ,j+1)[0] + _I(i ,j-1)[0] + _I(i ,j+1)[0])/5;
-		double g = (_I(i -1 ,j)[1] + _I(i ,j)[1] + _I(i ,j+1)[1] + _I(i ,j-1)[1] + _I(i ,j+1)[2])/5;
-		double r = (_I(i -1 ,j)[2] + _I(i ,j)[2] + _I(i ,j+1)[2] + _I(i ,j-1)[2] + _I(i ,j+1)[2])/5;
-		return cv::Vec3b(b,g,r);
-	}
-		
-	else
-		return cv::Vec3b(_I(i,j)[0], _I(i,j)[1], _I(i,j)[2]);
-}
-
 void DiodRecognition::onNewImage()
 {
 	CLOG(LTRACE) << "void DiodRecognition::onNewImage() begin\n";
@@ -115,7 +91,7 @@ void DiodRecognition::onNewImage()
 		// Retrieve image from the stream.
 		cv::Mat image = in_img.read();//.clone();
 
-        float _found = 0.0;
+        	float _found = 0.0;
 
 		double sumaB = 0;
 		double sumaG = 0;
@@ -179,44 +155,31 @@ void DiodRecognition::onNewImage()
 			}
 		}
         int prog = 50;
-        std::vector<cv::Point2f> gridPoints;
-	
+        std::vector<cv::Point2f> gridPoints;	
 	cv::Point2f wsp_zero;
 	wsp_zero.x = 0.0;
 	wsp_zero.y = 0.0;
 
-        if (maxB > prog & maxG > prog & maxR > prog & maxW > prog){
-            //std::cout<<"found"<<std::endl;
+        if (maxB > prog && maxG > prog && maxR > prog && maxW > prog){
             _found = 1.0;
             gridPoints.push_back(wsp_maxB);
             gridPoints.push_back(wsp_maxG);
             gridPoints.push_back(wsp_maxR);
             gridPoints.push_back(wsp_maxW);
+	    
+            diodPoints.write(gridPoints);
+	    gridPattern.setImagePoints(gridPoints); 
+            out_gridPattern.write(gridPattern);
+	    CLOG(LWARNING)<<"Diods found!!!\n\n\n";
         }
 
-
-        else{
-            _found = 0.0;
-            gridPoints.push_back(wsp_zero);
-            gridPoints.push_back(wsp_zero);
-            gridPoints.push_back(wsp_zero);
-            gridPoints.push_back(wsp_zero);
-        }
-        //std::cout<<wsp_maxB<<", "<<wsp_maxG<<", "<<wsp_maxR<<", "<<wsp_maxW<<::endl;
-
-        if(_found==1.0){
-		    CLOG(LWARNING)<<"Diods found!!!\n\n\n";
-		    diodPoints.write(gridPoints);
-		    gridPattern.setImagePoints(gridPoints);
-		    out_gridPattern.write(gridPattern);
-
-        }
-        else {
+	else {
             CLOG(LWARNING) << "Diods NOT found!!!\n\n\n";
         }
-			out_img.write(image);
-		//0 lub 1 jesli plansza znaleziona lub nie znaleziona
-		found.write(_found);
+
+        out_img.write(image);
+	//0 lub 1 jesli plansza znaleziona lub nie znaleziona
+	found.write(_found);
 
 	} catch (const cv::Exception& e) {
 		CLOG(LERROR) << e.what() << "\n";

@@ -54,28 +54,11 @@
 			<Component name="DrawCoordinateSystem" type="CvBasic:DrawCoordinateSystem" priority="8" bump="0">
 			</Component>
 
-			<Component name="HomogMatrixPub" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
-					<param name="ros.topic_name">center_x</param>
-			</Component>
+                        <Component name="DataCollect" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
+                        </Component>
 
-			<Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
-					<param name="ros.topic_name">homog_matrix</param>
-			</Component>
-
-			<Component name="HomogProxy_time_nsec_pocz" type="ROSProxy:FloatProxy" priority="10" bump="0">
-					<param name="ros.topic_name">time_nsec_pocz</param>
-			</Component>
-
-			<Component name="HomogProxy_time_sec_pocz" type="ROSProxy:FloatProxy" priority="10" bump="0">
-					<param name="ros.topic_name">time_sec_pocz</param>
-			</Component>
-
-			<Component name="HomogProxy_time_nsec_kon" type="ROSProxy:FloatProxy" priority="10" bump="0">
-					<param name="ros.topic_name">time_nsec_kon</param>
-			</Component>
-
-			<Component name="HomogProxy_time_sec_kon" type="ROSProxy:FloatProxy" priority="10" bump="0">
-					<param name="ros.topic_name">time_sec_kon</param>
+                        <Component name="SerwoInfo" type="ServoVisionObjectRecognition:ROSProxy" priority="9" bump="0">
+                                        <param name="topic_name">serwo_info</param>
 			</Component>
 
 			<Component name="Window" type="CvBasic:CvWindow" priority="11" bump="0">
@@ -99,13 +82,12 @@
 		</Source>
 
 		<Source name="NewestImage.out_time_nsec">
-			<sink>HomogMatrixPub.in_time_nsec_pocz</sink>
+                        <sink>DataCollect.in_time_nsec_pocz</sink>
 		</Source>
 
 		<Source name="NewestImage.out_time_sec">
-			<sink>HomogMatrixPub.in_time_sec_pocz</sink>
+                        <sink>DataCollect.in_time_sec_pocz</sink>
 		</Source>
-
 
 		<Source name="Roi.out_img">
 			<sink>ColorConverter.in_img</sink>
@@ -124,7 +106,7 @@
 			
 		<Source name="CvFindChessboardCorners.out_found">
 			<sink>SolvePnP.in_found</sink>
-			<sink>HomogMatrixPub.in_found</sink>
+                        <sink>DataCollect.in_found</sink>
 		</Source>
 	
 		<Source name="CvFindChessboardCorners.out_chessboard">
@@ -132,7 +114,7 @@
 		</Source>
 		
 		<Source name="SolvePnP.out_homogMatrix">
-			<sink>HomogMatrixPub.in_matrix</sink>
+                        <sink>DataCollect.in_matrix</sink>
 			<sink>DrawCoordinateSystem.in_homogMatrix</sink>
 		</Source>
 
@@ -148,24 +130,28 @@
 			<sink>Window.in_draw2</sink>
 		</Source>
 
-		<Source name="HomogMatrixPub.out_matrix">
-			<sink>HomogProxy.in_data</sink>
+                <Source name="DataCollect.out_matrix">
+                        <sink>SerwoInfo.in_matrix</sink>
 		</Source>
 
-		<Source name="HomogMatrixPub.out_time_nsec_pocz">
-			<sink>HomogProxy_time_nsec_pocz.in_data</sink>
+                <Source name="DataCollect.out_found">
+                        <sink>SerwoInfo.in_found</sink>
+                </Source>
+
+                <Source name="DataCollect.out_time_nsec_pocz">
+                        <sink>SerwoInfo.in_time_nsec_pocz</sink>
 		</Source>
 
-		<Source name="HomogMatrixPub.out_time_sec_pocz">
-			<sink>HomogProxy_time_sec_pocz.in_data</sink>
+                <Source name="DataCollect.out_time_sec_pocz">
+                        <sink>SerwoInfo.in_time_sec_pocz</sink>
 		</Source>
 
-		<Source name="HomogMatrixPub.out_time_nsec_kon">
-			<sink>HomogProxy_time_nsec_kon.in_data</sink>
+                <Source name="DataCollect.out_time_nsec_kon">
+                        <sink>SerwoInfo.in_time_nsec_kon</sink>
 		</Source>
 
-		<Source name="HomogMatrixPub.out_time_sec_kon">
-			<sink>HomogProxy_time_sec_kon.in_data</sink>
+                <Source name="DataCollect.out_time_sec_kon">
+                        <sink>SerwoInfo.in_time_sec_kon</sink>
 		</Source>
 				
         </DataStreams>  

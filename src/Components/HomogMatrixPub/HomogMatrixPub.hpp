@@ -14,7 +14,7 @@
 #include "EventHandler2.hpp"
 #include "Types/HomogMatrix.hpp"
 #include <opencv2/opencv.hpp>
-
+#include <ctime>
 #include <fstream>
 namespace Processors {
 namespace HomogMatrixPub {
@@ -70,16 +70,32 @@ protected:
 	// Input data streams
 	Base::DataStreamIn<Types::HomogMatrix> in_matrix;
 
+    Base::DataStreamIn<long int> in_time_nsec_pocz;
+
+    Base::DataStreamIn<long int> in_time_sec_pocz;
+
+    Base::DataStreamIn <int> in_found;
+
 	// Output data streams
     Base::DataStreamOut<vector<float> > out_matrix;
+
+    Base::DataStreamOut <int> out_found;
+
+    Base::DataStreamOut<long int> out_time_nsec_pocz;
+
+    Base::DataStreamOut<long int> out_time_sec_pocz;
+
+    Base::DataStreamOut<long int> out_time_nsec_kon;
+
+    Base::DataStreamOut<long int> out_time_sec_kon;
 
 	// Handlers
     Base::EventHandler2 h_onNewData;
 
-	// Properties
+    // Properties
+    //Base::Property<long int> trigger_delay;
 
-	
-	// Handlers
+    // Handlers
     void onNewData();
 
     std::fstream plik;

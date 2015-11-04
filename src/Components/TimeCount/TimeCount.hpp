@@ -1,11 +1,11 @@
 /*!
  * \file
  * \brief 
- * \author Mikołaj Kojdecki
+ * \author Maciej Wegierek
  */
 
-#ifndef NEWESTIMAGE_HPP_
-#define NEWESTIMAGE_HPP_
+#ifndef TIMECOUNT_HPP_
+#define TIMECOUNT_HPP_
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
@@ -13,29 +13,28 @@
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 
-#include <opencv2/opencv.hpp>
-#include <ctime>
+
 
 namespace Processors {
-namespace NewestImage {
+namespace TimeCount {
 
 /*!
- * \class NewestImage
- * \brief NewestImage processor class.
+ * \class TimeCount
+ * \brief TimeCount processor class.
  *
  * 
  */
-class NewestImage: public Base::Component {
+class TimeCount: public Base::Component {
 public:
 	/*!
 	 * Constructor.
 	 */
-	NewestImage(const std::string & name = "NewestImage");
+	TimeCount(const std::string & name = "TimeCount");
 
 	/*!
 	 * Destructor
 	 */
-	virtual ~NewestImage();
+	virtual ~TimeCount();
 
 	/*!
 	 * Prepare components interface (register streams and handlers).
@@ -68,31 +67,27 @@ protected:
 
 
 	// Input data streams
-	Base::DataStreamIn<cv::Mat, Base::DataStreamBuffer::Newest> in_img;
+    Base::DataStreamIn<int> in_time_nsec;
 
 	// Output data streams
-	Base::DataStreamOut<cv::Mat> out_img;
-
-    Base::DataStreamOut<long int> out_time_nsec;
-
-    Base::DataStreamOut<long int> out_time_sec;
 
 	// Handlers
-	Base::EventHandler2 h_onImage;
 
 	// Properties
 
-	// Handlers
-	void onImage();
+    // Handlers
+    Base::EventHandler2 h_onNewData;
+
+    void onNewData();
 
 };
 
-} //: namespace NewestImage
+} //: namespace TimeCount
 } //: namespace Processors
 
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("NewestImage", Processors::NewestImage::NewestImage)
+REGISTER_COMPONENT("TimeCount", Processors::TimeCount::TimeCount)
 
-#endif /* NEWESTIMAGE_HPP_ */
+#endif /* TIMECOUNT_HPP_ */

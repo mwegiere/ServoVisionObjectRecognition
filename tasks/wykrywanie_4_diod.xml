@@ -65,7 +65,7 @@
 
 			<Component name="Window" type="CvBasic:CvWindow" priority="12" bump="0">
 					<param name="count">3</param>
-					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad xyz</param>
+					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad XYZ</param>
 			</Component>  
                 </Executor>  
 
@@ -84,6 +84,14 @@
 			<sink>DrawDiods.in_img</sink>
 		</Source>
 
+		<Source name="NewestImage.out_time_nsec">
+			<sink>HomogProxy.in_time_nsec_pocz</sink>
+		</Source>
+
+		<Source name="NewestImage.out_time_sec">
+			<sink>HomogProxy.in_time_sec_pocz</sink>
+		</Source>
+
 		<Source name="CameraInfo.out_camera_info">
 			<sink>Calib.in_camera_info</sink>
 			<sink>SolvePnP.in_camera_info</sink>
@@ -92,6 +100,7 @@
 		
 		<Source name="DiodRecognition.found">
 			<sink>SolvePnP.in_found</sink>
+			<sink>HomogMatrixPub.in_found</sink>
 		</Source>
 		
 		<Source name="DiodRecognition.out_gridPattern">

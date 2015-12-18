@@ -72,24 +72,23 @@ bool ROSProxy::onStart() {
 
 void ROSProxy::onNewData() {
 
-	std::vector<float> matrix = in_matrix.read();
+    std::vector<double> matrix = in_matrix.read();
     int found = in_found.read();
     long int time_nsec_pocz = in_time_nsec_pocz.read();
     long int time_sec_pocz = in_time_sec_pocz.read();
     long int time_nsec_kon = in_time_nsec_kon.read();
     long int time_sec_kon = in_time_sec_kon.read();
 
-	serwo::SerwoInfo msg;
-
-	msg.matrix = matrix;
-	msg.found = found;
+    serwo::SerwoInfo msg;
+    msg.matrix = matrix; 
+    msg.found = found;
     msg.out_time_nsec_pocz = time_nsec_pocz;
     msg.out_time_sec_pocz = time_sec_pocz;
     msg.out_time_nsec_kon = time_nsec_kon;
     msg.out_time_sec_kon = time_sec_kon;
 
-	pub.publish(msg);
-	ros::spinOnce();
+    pub.publish(msg);
+    ros::spinOnce();
 }
 
 void ROSProxy::onTopicNameChanged(const std::string & old_value, const std::string & new_value) {

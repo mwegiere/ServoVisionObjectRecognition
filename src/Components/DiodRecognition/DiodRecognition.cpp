@@ -91,7 +91,7 @@ void DiodRecognition::onNewImage()
 		// Retrieve image from the stream.
 		cv::Mat image = in_img.read();//.clone();
 
-        	float _found = 0.0;
+        float _found = 0.0;
 
 		double sumaB = 0;
 		double sumaG = 0;
@@ -129,36 +129,95 @@ void DiodRecognition::onNewImage()
 				int g = ptr[3*j+1];
 				int r = ptr[3*j+2];
 			
-				if (b - (r+g) > maxB){
+                if (b - (r+g) > maxB + 4){
 					wsp_maxB.y = i;
-					wsp_maxB.x = j;
+                    wsp_maxB.x = j;
 					maxB = b - (r+g);
 				}
 
-				if (g- (r+b) > maxG ){
+                if (g- (r+b) > maxG + 4){
 					wsp_maxG.y = i;
 					wsp_maxG.x = j;
 					maxG = g- (r+b);
 				}
 
-				if (r- (g+b) > maxR){
+                if (r- (g+b) > maxR + 4){
 					wsp_maxR.y = i;
 					wsp_maxR.x = j;
 					maxR = r- (g+b);
 				}
 				
-				if (r + g + b > maxW){
+                if (r + g + b > maxW +4){
 					wsp_maxW.y = i;
 					wsp_maxW.x = j;
 					maxW = r + g + b;
 				}
 			}
-		}
+        }
+        //std::cout<<maxB<<std::endl;
+        int licznik = 0;
+        float suma_i = 0.0;
+        float suma_j = 0.0;
+        int i = 0;
+        int j = 0;
+        if (wsp_maxB.y - 3 > 0 && wsp_maxB.y + 3 < rows && wsp_maxB.x - 3 > 0 && wsp_maxB.x + 3 < cols){
+            for (i = wsp_maxB.y - 3; i < wsp_maxB.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxB.x - 3; j < wsp_maxB.x + 3; ++j) {
+                    if (ptr[3*j] > 0 || ptr[3*j+1] > 0 || ptr[3*j+2] > 0){
+                        licznik += ptr[3*j];
+                        suma_i += i*ptr[3*j];
+                        suma_j += j*ptr[3*j];
+                    }
+                }
+            }
+            wsp_maxB.y = (int)(suma_i/licznik);
+            wsp_maxB.x = (int)(suma_j/licznik);
+        }
+
+        licznik = 0;
+        suma_i = 0.0;
+        suma_j = 0.0;
+        if (wsp_maxG.y - 3 > 0 && wsp_maxG.y + 3 < rows && wsp_maxG.x - 3 > 0 && wsp_maxG.x + 3 < cols){
+            for (i = wsp_maxG.y - 3; i < wsp_maxG.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxG.x - 3; j < wsp_maxG.x + 3; ++j) {
+                    if (ptr[3*j] > 0 && ptr[3*j+1] > 0 && ptr[3*j+2] > 0){
+                        licznik += ptr[3*j+1];
+                        suma_i += i*ptr[3*j+1];
+                        suma_j += j*ptr[3*j+1];
+                    }
+                }
+            }
+            wsp_maxG.y = (int)suma_i/licznik;
+            wsp_maxG.x = (int)suma_j/licznik;
+        }
+
+
+        licznik = 0;
+        suma_i = 0.0;
+        suma_j = 0.0;
+        if (wsp_maxR.y - 3 > 0 && wsp_maxR.y + 3 < rows && wsp_maxR.x - 3 > 0 && wsp_maxR.x + 3 < cols){
+            for (i = wsp_maxR.y - 3; i < wsp_maxR.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxR.x - 3; j < wsp_maxR.x + 3; ++j) {
+                    if (ptr[3*j] > 0 && ptr[3*j+1] > 0 && ptr[3*j+2] > 0){
+                        licznik += ptr[3*j+1];
+                        suma_i += i*ptr[3*j+1];
+                        suma_j += j*ptr[3*j+1];
+                    }
+                }
+            }
+            wsp_maxR.y = (int)suma_i/licznik;
+            wsp_maxR.x = (int)suma_j/licznik;
+        }
+
+
         int prog = 50;
         std::vector<cv::Point2f> gridPoints;	
-	cv::Point2f wsp_zero;
-	wsp_zero.x = 0.0;
-	wsp_zero.y = 0.0;
+        cv::Point2f wsp_zero;
+        wsp_zero.x = 0.0;
+        wsp_zero.y = 0.0;
 
         if (maxB > prog && maxG > prog && maxR > prog && maxW > prog){
             _found = 1.0;
@@ -166,6 +225,11 @@ void DiodRecognition::onNewImage()
             gridPoints.push_back(wsp_maxG);
             gridPoints.push_back(wsp_maxR);
             gridPoints.push_back(wsp_maxW);
+            //std::cout<<wsp_maxB<<std::endl;
+            //std::cout<<wsp_maxG<<std::endl;
+            //std::cout<<wsp_maxR<<std::endl;
+            //std::cout<<wsp_maxW<<std::endl;
+            //std::cout<<"---------"<<std::endl;
 	    
             diodPoints.write(gridPoints);
 	    gridPattern.setImagePoints(gridPoints); 

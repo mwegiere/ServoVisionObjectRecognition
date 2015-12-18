@@ -6,30 +6,30 @@
             </Author>  
       
             <Description>  
-                <brief>Photo processing: circel finding</brief>  
+                <brief>Photo processing: diods finding</brief>  
                 <full>Processes images.</full>    
             </Description>  
         </Reference>  
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="0.02"> 
+                <Executor name="Processing" period="0.2">
 		
-                        <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+                        <Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
-                        </Component-->
+                        </Component>
 
-                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+                        <!--Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
 					<param name="sequence.pattern">.*\.png</param>
-                        </Component>
+                        </Component-->
 			
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
 					<param name="width">1296</param>
 					<param name="height">1032</param>
-					<param name="camera_matrix">1097.309750 0.000000 631.666708; 0.000000 1091.041004 518.507823; 0 0 1</param>
-					<param name="dist_coeffs">-0.432862 0.206828 -0.005944 0.003594 0.000000</param>
-					<param name="projection_matrix">916.519531 0.000000 633.177700 0.000000; 0.000000 975.772583 511.869155 0.000000; 0.000000 0.000000 1.000000 0.000000</param>
+					<param name="camera_matrix">1080.054285 0.000000 655.287407; 0.000000 1072.245647 524.778361; 0 0 1</param>
+					<param name="dist_coeffs">-0.413271 0.172960 -0.004729 -0.000895 0.000000</param>
+					<param name="projection_matrix">898.129089 0.000000 655.656361 0.000000; 0.000000 958.911926 520.994942 0.000000; 0.000000 0.000000 1.000000 0.000000</param>
 			</Component>
 			
 			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="3" bump="0">						
@@ -38,15 +38,9 @@
 			<Component name="DiodRecognition" type="ServoVisionObjectRecognition:DiodRecognition" priority="4" bump="0">					
 			</Component>
 
-			<Component name="Calib" type="CvBasic:Calib" priority="5" bump="0">						
-			</Component>
-
 			<Component name="SolvePnP" type="CvBasic:CvSolvePnP" priority="6" bump="0">
 					<param name="enable">false</param>
 					<param name="flags">CV_P3P</param>						
-			</Component>
-
-			<Component name="DrawCoordinateSystem" type="CvBasic:DrawCoordinateSystem" priority="7" bump="0">
 			</Component>
 
 			<Component name="DrawDiods" type="ServoVisionObjectRecognition:DrawDiods" priority="8" bump="0">
@@ -59,13 +53,9 @@
 					<param name="ros.topic_name">homog_matrix</param>
 			</Component>
 
-			<!--Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="11" bump="0">
-					<param name="ros.topic_name">found</param>
-			</Component-->
-
 			<Component name="Window" type="CvBasic:CvWindow" priority="12" bump="0">
-					<param name="count">3</param>
-					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad XYZ</param>
+					<param name="count">1</param>
+					<param name="title">Znalezione diody</param>
 			</Component>  
                 </Executor>  
 
@@ -79,15 +69,11 @@
 		
 		<Source name="NewestImage.out_img">
 			<sink>DiodRecognition.in_img</sink>
-			<sink>Window.in_img0</sink>
-			<sink>Window.in_img2</sink>
 			<sink>DrawDiods.in_img</sink>
 		</Source>
 
 		<Source name="CameraInfo.out_camera_info">
-			<sink>Calib.in_camera_info</sink>
 			<sink>SolvePnP.in_camera_info</sink>
-			<sink>DrawCoordinateSystem.in_camera_matrix</sink>
 		</Source>
 		
 		<Source name="DiodRecognition.found">
@@ -97,40 +83,22 @@
 		
 		<Source name="DiodRecognition.out_gridPattern">
 			<sink>SolvePnP.in_object3d</sink>
-		        <sink>Calib.in_object3d</sink>
 		</Source>
 
 		<Source name="DiodRecognition.diodPoints">
 			<sink>DrawDiods.diodPoints</sink>
 		</Source>
 
-		<!--Source name="DiodRecognition.found">
-			<sink>FoundProxy.in_data</sink>
-		</Source-->
-		
 		<Source name="SolvePnP.out_homogMatrix">
-			<sink>DrawCoordinateSystem.in_homogMatrix</sink>
 			<sink>HomogMatrixPub.in_matrix</sink>
-		</Source>
-
-		<Source name="SolvePnP.out_rvec">
-			<sink>DrawCoordinateSystem.in_rvec</sink>
-		</Source>
-
-		<Source name="SolvePnP.out_tvec">
-			<sink>DrawCoordinateSystem.in_tvec</sink>
 		</Source>
 
 		<Source name="HomogMatrixPub.out_matrix">
 			<sink>HomogProxy.in_data</sink>
 		</Source>
-	
-		<Source name="DrawCoordinateSystem.out_csystem">
-			<sink>Window.in_draw2</sink>
-		</Source>
 
 		<Source name="DrawDiods.out_img">
-			<sink>Window.in_img1</sink>
+			<sink>Window.in_img0</sink>
 		</Source>
 		
         </DataStreams>  

@@ -67,7 +67,7 @@ protected:
 
 
 	// Input data streams
-        Base::DataStreamIn<vector<float> > in_matrix;
+        Base::DataStreamIn<vector<double> > in_matrix;
 
         Base::DataStreamIn<int> in_found;
 

@@ -14,14 +14,14 @@
             <Subtask name="main">  
 		<Executor name="Processing" period="2">  
 
-			<Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+                        <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
-                        </Component>
+                        </Component-->
 			
-                        <!--Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
 					<param name="sequence.pattern">.*\.png</param>
-                        </Component-->
+                        </Component>
 			
 			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="2" bump="0">						
 			</Component>

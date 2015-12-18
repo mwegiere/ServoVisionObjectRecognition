@@ -1,3 +1,4 @@
+
     <Task>  
         <Reference>  
             <Author>  
@@ -13,7 +14,7 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="0.02"> 
+		<Executor name="Processing" period="0.1"> 
 		
                         <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
@@ -22,6 +23,7 @@
                         <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
 					<param name="sequence.pattern">.*\.png</param>
+					
                         </Component>
 			
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
@@ -82,6 +84,14 @@
 			<sink>Window.in_img0</sink>
 			<sink>Window.in_img2</sink>
 			<sink>DrawDiods.in_img</sink>
+		</Source>
+
+		<Source name="NewestImage.out_time_nsec">
+			<sink>HomogProxy.in_time_nsec_pocz</sink>
+		</Source>
+
+		<Source name="NewestImage.out_time_sec">
+			<sink>HomogProxy.in_time_sec_pocz</sink>
 		</Source>
 
 		<Source name="CameraInfo.out_camera_info">

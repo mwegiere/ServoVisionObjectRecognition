@@ -13,7 +13,7 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="0.02"> 
+		<Executor name="Processing" period="0.5"> 
 		
                         <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
@@ -34,6 +34,9 @@
 			
 			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="3" bump="0">						
 			</Component>
+
+                        <Component name="EventTimestamp" type="ServoVisionObjectRecognition:EventTimestamp" priority="3" bump="0">
+                        </Component>
 
 			<Component name="DiodRecognition" type="ServoVisionObjectRecognition:DiodRecognition" priority="4" bump="0">					
 			</Component>
@@ -65,13 +68,13 @@
 
 			<Component name="Window" type="CvBasic:CvWindow" priority="12" bump="0">
 					<param name="count">3</param>
-					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad XYZ</param>
+					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad xyz</param>
 			</Component>  
                 </Executor>  
 
             </Subtask>  
         </Subtasks>  
-      
+
         <DataStreams>  
 		<Source name="Sequence.out_img">
 			<sink>NewestImage.in_img</sink>
@@ -92,7 +95,6 @@
 		
 		<Source name="DiodRecognition.found">
 			<sink>SolvePnP.in_found</sink>
-			<sink>HomogMatrixPub.in_found</sink>
 		</Source>
 		
 		<Source name="DiodRecognition.out_gridPattern">

@@ -1,0 +1,159 @@
+    <Task>  
+        <Reference>  
+            <Author>  
+                <name>Maciej Wegierek</name>  
+                <link>wegierek.maciej@gmail.com</link>  
+            </Author>  
+      
+            <Description>  
+                <brief>Photo processing: chessboard orientation and position finding</brief>   
+            </Description>  
+        </Reference>  
+          
+        <Subtasks>  
+            <Subtask name="main">  
+		<Executor name="Processing" period="0.5">  
+
+                        <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+					<param name="image_topic">/camera/image_color</param>
+                        </Component-->
+			
+                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
+					<param name="sequence.pattern">.*\.png</param>
+					<param name="mode.loop">1</param>
+                        </Component>
+			
+			<Component name="NewestImage" type="ServoVisionObjectRecognition:NewestImage" priority="2" bump="0">						
+			</Component>
+
+			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="3">
+					<param name="width">1296</param>
+					<param name="height">1032</param>
+					<param name="camera_matrix">1097.309750 0.000000 631.666708; 0.000000 1091.041004 518.507823; 0 0 1</param>
+					<param name="dist_coeffs">-0.432862 0.206828 -0.005944 0.003594 0.000000</param>
+					<param name="projection_matrix">916.519531 0.000000 633.177700 0.000000; 0.000000 975.772583 511.869155 0.000000; 0.000000 0.000000 1.000000 0.000000</param>
+			</Component>
+
+			<Component name="Roi" type="CvRoi:Roi" priority="4" bump="0">						
+			</Component>
+			
+			<Component name="ColorConverter" type="CvBasic:CvColorConv" priority="5" bump="0">
+					<param name="type">CV_RGB2GRAY</param>
+			</Component>
+
+			<Component name="CvFindChessboardCorners" type="CvBasic:CvFindChessboardCorners" priority="6" bump="0">
+					<param name="chessboard.board_width">5</param>
+					<param name="chessboard.board_height">4</param>
+					<param name="chessboard.square_width">0.018333</param>
+					<param name="chessboard.square_height">0.01852</param>							
+			</Component>
+
+			<Component name="SolvePnP" type="CvBasic:CvSolvePnP" priority="7" bump="0">						
+			</Component>
+
+			<Component name="DrawCoordinateSystem" type="CvBasic:DrawCoordinateSystem" priority="8" bump="0">
+			</Component>
+
+                        <Component name="DataCollect" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
+                        </Component>
+
+                        <Component name="SerwoInfo" type="ServoVisionObjectRecognition:ROSProxy" priority="9" bump="0">
+                                        <param name="topic_name">serwo_info</param>
+			</Component>
+
+			<Component name="Window" type="CvBasic:CvWindow" priority="11" bump="0">
+					<param name="count">3</param>
+					<param name="title">Obraz wejsciowy, Obraz uciety, Uklad wspolrzednych</param>
+			</Component>  			
+                </Executor>  
+
+            </Subtask>  
+        </Subtasks>  
+      
+        <DataStreams>  
+
+           	<Source name="Sequence.out_img">
+			<sink>NewestImage.in_img</sink>
+		</Source>
+		
+		<Source name="NewestImage.out_img">
+			<sink>Roi.in_img</sink>
+			<sink>Window.in_img0</sink>
+		</Source>
+
+		<Source name="NewestImage.out_time_nsec">
+                        <sink>DataCollect.in_time_nsec_pocz</sink>
+		</Source>
+
+		<Source name="NewestImage.out_time_sec">
+                        <sink>DataCollect.in_time_sec_pocz</sink>
+		</Source>
+
+		<Source name="Roi.out_img">
+			<sink>ColorConverter.in_img</sink>
+			<sink>Window.in_img2</sink>
+		</Source>
+
+		<Source name="ColorConverter.out_img">
+			<sink>Window.in_img1</sink>
+			<sink>CvFindChessboardCorners.in_img</sink>
+		</Source>
+
+		<Source name="CameraInfo.out_camera_info">
+			<sink>SolvePnP.in_camera_info</sink>
+			<sink>DrawCoordinateSystem.in_camera_matrix</sink>
+		</Source>
+			
+		<Source name="CvFindChessboardCorners.out_found">
+			<sink>SolvePnP.in_found</sink>
+                        <sink>DataCollect.in_found</sink>
+		</Source>
+	
+		<Source name="CvFindChessboardCorners.out_chessboard">
+			<sink>SolvePnP.in_object3d</sink>
+		</Source>
+		
+		<Source name="SolvePnP.out_homogMatrix">
+                        <sink>DataCollect.in_matrix</sink>
+			<sink>DrawCoordinateSystem.in_homogMatrix</sink>
+		</Source>
+
+		<Source name="SolvePnP.out_rvec">
+			<sink>DrawCoordinateSystem.in_rvec</sink>
+		</Source>
+
+		<Source name="SolvePnP.out_tvec">
+			<sink>DrawCoordinateSystem.in_tvec</sink>
+		</Source>
+		
+		<Source name="DrawCoordinateSystem.out_csystem">
+			<sink>Window.in_draw2</sink>
+		</Source>
+
+                <Source name="DataCollect.out_matrix">
+                        <sink>SerwoInfo.in_matrix</sink>
+		</Source>
+
+                <Source name="DataCollect.out_found">
+                        <sink>SerwoInfo.in_found</sink>
+                </Source>
+
+                <Source name="DataCollect.out_time_nsec_pocz">
+                        <sink>SerwoInfo.in_time_nsec_pocz</sink>
+		</Source>
+
+                <Source name="DataCollect.out_time_sec_pocz">
+                        <sink>SerwoInfo.in_time_sec_pocz</sink>
+		</Source>
+
+                <Source name="DataCollect.out_time_nsec_kon">
+                        <sink>SerwoInfo.in_time_nsec_kon</sink>
+		</Source>
+
+                <Source name="DataCollect.out_time_sec_kon">
+                        <sink>SerwoInfo.in_time_sec_kon</sink>
+		</Source>
+				
+        </DataStreams>  
+    </Task>  

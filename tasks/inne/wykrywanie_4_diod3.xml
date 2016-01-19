@@ -1,4 +1,3 @@
-
     <Task>  
         <Reference>  
             <Author>  
@@ -14,7 +13,7 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="1.0"> 
+		<Executor name="Processing" period="0.5"> 
 		
                         <Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
@@ -22,8 +21,7 @@
 
                         <!--Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
-					<param name="sequence.pattern">.*\.png</param>
-					
+                                        <param name="sequence.pattern">.*\.png</param>
                         </Component-->
 			
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
@@ -57,23 +55,19 @@
 			<Component name="HomogMatrixPub" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
 			</Component>
 
-			<!--Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
-					<param name="ros.topic_name">homog_matrix</param>
-			</Component-->
-
-			<!--Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="11" bump="0">
-					<param name="ros.topic_name">found</param>
-			</Component-->
+                        <Component name="HomogProxy" type="ServoVisionObjectRecognition:ROSProxy" priority="10" bump="0">
+                                        <param name="topic_name">serwo_info</param>
+			</Component>
 
 			<Component name="Window" type="CvBasic:CvWindow" priority="12" bump="0">
 					<param name="count">3</param>
-					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad XYZ</param>
+					<param name="title">Obraz wejsciowy, Znalezione diody, Uklad xyz</param>
 			</Component>  
                 </Executor>  
 
             </Subtask>  
         </Subtasks>  
-      
+
         <DataStreams>  
 		<Source name="Sequence.out_img">
 			<sink>NewestImage.in_img</sink>
@@ -86,14 +80,6 @@
 			<sink>DrawDiods.in_img</sink>
 		</Source>
 
-		<Source name="NewestImage.out_time_nsec">
-			<sink>HomogProxy.in_time_nsec_pocz</sink>
-		</Source>
-
-		<Source name="NewestImage.out_time_sec">
-			<sink>HomogProxy.in_time_sec_pocz</sink>
-		</Source>
-
 		<Source name="CameraInfo.out_camera_info">
 			<sink>Calib.in_camera_info</sink>
 			<sink>SolvePnP.in_camera_info</sink>
@@ -102,7 +88,6 @@
 		
 		<Source name="DiodRecognition.found">
 			<sink>SolvePnP.in_found</sink>
-			<sink>HomogMatrixPub.in_found</sink>
 		</Source>
 		
 		<Source name="DiodRecognition.out_gridPattern">
@@ -131,10 +116,10 @@
 			<sink>DrawCoordinateSystem.in_tvec</sink>
 		</Source>
 
-		<!--Source name="HomogMatrixPub.out_matrix">
-			<sink>HomogProxy.in_data</sink>
-		</Source-->
-	
+		<Source name="HomogMatrixPub.out_matrix">
+			<sink>HomogProxy.in_matrix</sink>
+		</Source>
+
 		<Source name="DrawCoordinateSystem.out_csystem">
 			<sink>Window.in_draw2</sink>
 		</Source>

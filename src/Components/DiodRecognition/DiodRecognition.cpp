@@ -93,9 +93,9 @@ void DiodRecognition::onNewImage()
 
         float _found = 0.0;
 
-		double sumaB = 0;
-		double sumaG = 0;
-		double sumaR = 0;
+        //double sumaB = 0;
+        //double sumaG = 0;
+        //double sumaR = 0;
 
 		//wsp maksymalnych składowych
 		cv::Point2f wsp_maxB;
@@ -105,16 +105,16 @@ void DiodRecognition::onNewImage()
 
 		//maksymalne składowe
 		int maxB = 0;
-		double maxBminG = 255;
-		double maxBminR = 255;
+        //double maxBminG = 255;
+        //double maxBminR = 255;
 
 		int maxG = 0;
-		double maxGminB = 255;
-		double maxGminR = 255;
+        //double maxGminB = 255;
+        //double maxGminR = 255;
 
 		int maxR = 0;
-		double maxRminB = 255;
-		double maxRminG = 255;
+        //double maxRminB = 255;
+        //double maxRminG = 255;
 
 		int maxW = 0;
 		
@@ -155,7 +155,8 @@ void DiodRecognition::onNewImage()
 			}
         }
         //std::cout<<maxB<<std::endl;
-        int licznik = 0;
+
+        /*int licznik = 0;
         float suma_i = 0.0;
         float suma_j = 0.0;
         int i = 0;
@@ -211,28 +212,115 @@ void DiodRecognition::onNewImage()
             wsp_maxR.y = (int)suma_i/licznik;
             wsp_maxR.x = (int)suma_j/licznik;
         }
+        */
+
+        cv::Point2f wsp_maxB_new;
+        cv::Point2f wsp_maxG_new;
+        cv::Point2f wsp_maxR_new;
+        cv::Point2f wsp_maxW_new;
+
+        int i = 0;
+        int j = 0;
+        maxB = 0;
+        maxG = 0;
+        if (wsp_maxB.y - 3 > 0 && wsp_maxB.y + 3 < rows && wsp_maxB.x - 3 > 0 && wsp_maxB.x + 3 < cols){
+            for (i = wsp_maxB.y - 3; i < wsp_maxB.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxB.x - 3; j < wsp_maxB.x + 3; ++j) {
+                    if (ptr[3*j] > maxB){
+                        maxB = ptr[3*j];
+                        wsp_maxB_new.y = i;
+                        wsp_maxB_new.x = j;
+                    }
+                }
+            }
+        }
+
+        maxB = 0;
+        maxG = 0;
+        if (wsp_maxG.y - 3 > 0 && wsp_maxG.y + 3 < rows && wsp_maxG.x - 3 > 0 && wsp_maxG.x + 3 < cols){
+            for (i = wsp_maxG.y - 3; i < wsp_maxG.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxG.x - 3; j < wsp_maxG.x + 3; ++j) {
+                    if (ptr[3*j+1] > maxG){
+                        maxG = ptr[3*j+1];
+                        wsp_maxG_new.y = i;
+                        wsp_maxG_new.x = j;
+                    }
+                }
+            }
+        }
+
+        maxB = 0;
+        maxG = 0;
+        if (wsp_maxR.y - 3 > 0 && wsp_maxR.y + 3 < rows && wsp_maxR.x - 3 > 0 && wsp_maxR.x + 3 < cols){
+            for (i = wsp_maxR.y - 3; i < wsp_maxR.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxR.x - 3; j < wsp_maxR.x + 3; ++j) {
+                    if (ptr[3*j+2] > maxG){
+                        maxG = ptr[3*j+2];
+                        wsp_maxR_new.y = i;
+                        wsp_maxR_new.x = j;
+                    }
+                }
+            }
+        }
+
+        int licznik = 0;
+        int suma_i = 0;
+        int suma_j = 0;
+        maxW = 0;
+        if (wsp_maxW.y - 3 > 0 && wsp_maxW.y + 3 < rows && wsp_maxW.x - 3 > 0 && wsp_maxW.x + 3 < cols){
+            for (i = wsp_maxW.y - 3; i < wsp_maxW.y + 3; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxW.x - 3; j < wsp_maxW.x + 3; ++j) {
+                        if (ptr[3*j] + ptr[3*j+1]  > maxW){
+                            maxW = ptr[3*j] + ptr[3*j+1];
+                            wsp_maxW_new.y = i;
+                            wsp_maxW_new.x = j;
+                        }
+                }
+            }
+        }
+
+        /*if (wsp_maxW.y - 3 > 0 && wsp_maxW.y + 3 < rows && wsp_maxW.x - 3 > 0 && wsp_maxW.x + 3 < cols){
+            for (i = wsp_maxW.y - 1; i < wsp_maxW.y + 1; ++i) {
+                ptr = image.ptr(i);
+                for (j = wsp_maxW.x - 1; j < wsp_maxW.x + 1; ++j) {
+                    if ((ptr[3*j] + ptr[3*j+1] + ptr[3*j+2])> 10){
+                        licznik += (ptr[3*j] + ptr[3*j+1] + ptr[3*j+2]);
+                        suma_i += i*((ptr[3*j] + ptr[3*j+1] + ptr[3*j+2]));
+                        suma_j += j*(ptr[3*j] + ptr[3*j+1] + ptr[3*j+2]);
+                    }
+                }
+            }
+            wsp_maxW.y = (int)(suma_i/licznik);
+            wsp_maxW.x = (int)(suma_j/licznik);
+        }*/
 
 
-        int prog = 50;
+        std::cout<<"B"<<std::endl;
+        std::cout<<wsp_maxB_new<<std::endl;
+        std::cout<<"G"<<std::endl;
+        std::cout<<wsp_maxG_new<<std::endl;
+        std::cout<<"W"<<std::endl;
+        std::cout<<wsp_maxW_new<<std::endl;
+        std::cout<<"R"<<std::endl;
+        std::cout<<wsp_maxR_new<<std::endl;
+        std::cout<<maxG<<std::endl;
+        std::cout<<""<<std::endl;
+
         std::vector<cv::Point2f> gridPoints;	
-        cv::Point2f wsp_zero;
-        wsp_zero.x = 0.0;
-        wsp_zero.y = 0.0;
 
-        if (maxB > prog && maxG > prog && maxR > prog && maxW > prog){
+        if (wsp_maxR.y > 0){
             _found = 1.0;
-            gridPoints.push_back(wsp_maxB);
-            gridPoints.push_back(wsp_maxG);
-            gridPoints.push_back(wsp_maxR);
-            gridPoints.push_back(wsp_maxW);
-            //std::cout<<wsp_maxB<<std::endl;
-            //std::cout<<wsp_maxG<<std::endl;
-            //std::cout<<wsp_maxR<<std::endl;
-            //std::cout<<wsp_maxW<<std::endl;
-            //std::cout<<"---------"<<std::endl;
+            gridPoints.push_back(wsp_maxB_new);
+            gridPoints.push_back(wsp_maxG_new);
+            gridPoints.push_back(wsp_maxR_new);
+            gridPoints.push_back(wsp_maxW_new);
 	    
             diodPoints.write(gridPoints);
-	    gridPattern.setImagePoints(gridPoints); 
+            gridPattern.setImagePoints(gridPoints);
             out_gridPattern.write(gridPattern);
 	    CLOG(LWARNING)<<"Diods found!!!\n\n\n";
         }

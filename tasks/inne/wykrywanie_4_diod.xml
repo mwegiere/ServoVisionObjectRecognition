@@ -1,4 +1,3 @@
-
     <Task>  
         <Reference>  
             <Author>  
@@ -14,17 +13,16 @@
           
         <Subtasks>  
             <Subtask name="main">  
-		<Executor name="Processing" period="1.0"> 
+		<Executor name="Processing" period="0.02"> 
 		
-                        <Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
+                        <!--Component name="Sequence" type="ROSProxy:CameraSubscriber" priority="1" bump="0">
 					<param name="image_topic">/camera/image_color</param>
-                        </Component>
+                        </Component-->
 
-                        <!--Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
+                        <Component name="Sequence" type="CvBasic:Sequence" priority="1" bump="0">
 					<param name="sequence.directory">%[TASK_LOCATION]%/../data/</param>
 					<param name="sequence.pattern">.*\.png</param>
-					
-                        </Component-->
+                        </Component>
 			
 			<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="2">
 					<param name="width">1296</param>
@@ -57,9 +55,9 @@
 			<Component name="HomogMatrixPub" type="ServoVisionObjectRecognition:HomogMatrixPub" priority="9" bump="0">
 			</Component>
 
-			<!--Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
+			<Component name="HomogProxy" type="ROSProxy:Float32MultiArrayProxy" priority="10" bump="0">
 					<param name="ros.topic_name">homog_matrix</param>
-			</Component-->
+			</Component>
 
 			<!--Component name="FoundProxy" type="ROSProxy:FloatProxy" priority="11" bump="0">
 					<param name="ros.topic_name">found</param>
@@ -84,14 +82,6 @@
 			<sink>Window.in_img0</sink>
 			<sink>Window.in_img2</sink>
 			<sink>DrawDiods.in_img</sink>
-		</Source>
-
-		<Source name="NewestImage.out_time_nsec">
-			<sink>HomogProxy.in_time_nsec_pocz</sink>
-		</Source>
-
-		<Source name="NewestImage.out_time_sec">
-			<sink>HomogProxy.in_time_sec_pocz</sink>
 		</Source>
 
 		<Source name="CameraInfo.out_camera_info">
@@ -131,9 +121,9 @@
 			<sink>DrawCoordinateSystem.in_tvec</sink>
 		</Source>
 
-		<!--Source name="HomogMatrixPub.out_matrix">
+		<Source name="HomogMatrixPub.out_matrix">
 			<sink>HomogProxy.in_data</sink>
-		</Source-->
+		</Source>
 	
 		<Source name="DrawCoordinateSystem.out_csystem">
 			<sink>Window.in_draw2</sink>
